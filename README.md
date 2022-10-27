@@ -56,7 +56,7 @@ export default configureStore({
 });
 ```
 
-The Redux store would look like this before and after running `testAsyncThunk`:
+The Redux store would look like this before and after dispatching both `fetchTodos` and `fetchPosts` concurrently:
 
 ```
 //before dispatch
