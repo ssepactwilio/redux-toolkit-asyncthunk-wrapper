@@ -1,6 +1,6 @@
 {
   "name": "redux-toolkit-asyncthunk-wrapper",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Removes boilerplate code surrounding setting up AsyncThunks with Redux Toolkit.",
   "main": "index.js",
   "scripts": {
