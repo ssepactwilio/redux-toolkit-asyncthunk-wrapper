@@ -9,9 +9,16 @@ First, create an AsyncThunk as you normally would.
 ```
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-export const testAsyncThunk = createAsyncThunk("[Test]", async (params) => {
+export const fetchTodos = createAsyncThunk("Fetch Todos", async (params) => {
   const data = await axios
-    .get("https://jsonplaceholder.typicode.com/todos/1")
+    .get("https://jsonplaceholder.typicode.com/todos/")
+    .then((resp) => resp.data);
+  return data;
+});
+
+export const fetchPosts = createAsyncThunk("Fetch Posts", async (params) => {
+  const data = await axios
+    .get("https://jsonplaceholder.typicode.com/posts/")
     .then((resp) => resp.data);
   return data;
 });
@@ -22,39 +29,71 @@ Then, when you create your Redux store, use the `createReducer` method of `redux
 
 ```
 import { configureStore } from "@reduxjs/toolkit";
-import createReducer from "redux-toolkit-asyncthunk-wrapper";
-import { testAsyncThunk } from "./actions";
+import createReducer from ".";
+import { fetchPosts, fetchTodos } from "./actions";
+
+const asyncThunkCollection = [
+  {
+    stateName: "todos",
+    asyncThunk: fetchTodos,
+    options: {
+      payloadTransformer: (payload) => {
+        console.log("I can modify the payload from a successful promise here.");
+        return { count: payload.length };
+      },
+      initialState: [],
+    },
+  },
+  {
+    stateName: "posts",
+    asyncThunk: fetchPosts,
+    options: {},
+  },
+];
 
 export default configureStore({
-  reducer: createReducer([{ stateName: "test", asyncThunk: testAsyncThunk, options:{
-    payloadTransformer: (payload)=>{
-        console.log("I can modify the payload from a successful promise here.")
-        return payload.userId
-    },
-    initialState: 0
-  } }]),
+  reducer: createReducer(asyncThunkCollection),
 });
 ```
 
-That's it. The Redux store would look like this before and after running the code above:
+The Redux store would look like this before and after running `testAsyncThunk`:
 
 ```
-//before
-test: {
-    data: 0,
+//before dispatch
+{
+  todos: {
+    data: [],
     fetching: true,
     fetchingSuccess: false,
     fetchingFailure: false
+  },
+  posts: {
+    data: [],
+    fetching: true,
+    fetchingSuccess: false,
+    fetchingFailure: false
+  }
 }
 
-//after
-test: {
-    data: 1,
+//after dispatch
+{
+  todos: {
+    data: {
+      count: 200
+    },
     fetching: false,
     fetchingSuccess: true,
     fetchingFailure: false
+  },
+  posts: {
+    data: [...],
+    fetching: false,
+    fetchingSuccess: true,
+    fetchingFailure: false
+  }
 }
 ```
+That's it. Redux can be configured with two minimal blocks of code.
 
 
 ### Using `createReducer`

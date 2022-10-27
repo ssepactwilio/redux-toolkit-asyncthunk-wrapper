@@ -75,4 +75,4 @@ const createReducer = (states) => {
   });
 };
 
-export default createReducer
+export default createReducer;
