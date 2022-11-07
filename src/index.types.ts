@@ -2,8 +2,7 @@ import { AsyncThunk } from "@reduxjs/toolkit"
 
 
 export interface ICreateReducerInput<T,R> {
-
-    asyncThunk:AsyncThunk<any,any,any>
+    asyncThunk:AsyncThunk<T,any,any>
     options?:IReduceOptions<T,R>
     stateName:string
 }

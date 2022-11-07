@@ -1,8 +1,9 @@
 {
   "name": "redux-toolkit-asyncthunk-wrapper",
-  "version": "1.0.9",
+  "version": "1.0.11",
   "description": "Removes boilerplate code surrounding setting up AsyncThunks with Redux Toolkit.",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
