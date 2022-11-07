@@ -1,4 +1,5 @@
-import { createReducer as reduxToolkitCreateReducer } from "@reduxjs/toolkit";
+import { ActionReducerMapBuilder, AsyncThunk, createReducer as reduxToolkitCreateReducer } from "@reduxjs/toolkit";
+import { ICreateReducerInput, IReduceOptions } from "./index.types";
 
 const fetchingState = {
   fetching: false,
@@ -24,20 +25,19 @@ const fetchingStates = {
   },
 };
 
-/** @type {(stateKey:string, asyncThunk:AsyncThunk, builder:ActionReducerMapBuilder, options: {payloadTransformer:(payload:any)})} */
-const fastReduce = (stateKey, asyncThunk, builder, options = {}) =>
+const fastReduce = (stateKey:string, asyncThunk:AsyncThunk<any,any,any>, builder:ActionReducerMapBuilder<{}>, options:IReduceOptions<any,any> = {}) =>
   builder
     .addCase(asyncThunk.pending, (state, { payload }) => ({
       ...state,
       [stateKey]: {
-        ...state[stateKey],
+        ...(state as any)[stateKey],
         ...fetchingStates.fetching,
       },
     }))
     .addCase(asyncThunk.fulfilled, (state, { payload }) => ({
       ...state,
       [stateKey]: {
-        ...state[stateKey],
+        ...(state as any)[stateKey],
         ...fetchingStates.success,
         data:
           typeof options.payloadTransformer === "function"
@@ -48,12 +48,12 @@ const fastReduce = (stateKey, asyncThunk, builder, options = {}) =>
     .addCase(asyncThunk.rejected, (state, { payload }) => ({
       ...state,
       [stateKey]: {
-        ...state[stateKey],
+        ...(state as any)[stateKey],
         ...fetchingStates.failure,
       },
     }));
 
-const createReducer = (states) => {
+const createReducer = (states:ICreateReducerInput<any,any>[]) => {
   const initialState = states.reduce(
     (obj, { stateName, options }) =>
       Object.assign(obj, {
