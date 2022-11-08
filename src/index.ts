@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder, AsyncThunk, createReducer as reduxToolkitCreateReducer } from "@reduxjs/toolkit";
-import { ICreateReducerInput, IReduceOptions } from "./index.types";
+import { ICreateReducerInput, IFetchingState, IReduceOptions, IReducerState } from "./index.types";
 
-const fetchingState = {
+const fetchingState:IFetchingState = {
   fetching: false,
   fetchingSuccess: false,
   fetchingFailure: false,
@@ -54,7 +54,7 @@ const fastReduce = (stateKey:string, asyncThunk:AsyncThunk<any,any,any>, builder
     }));
 
 const createReducer = (states:ICreateReducerInput<any,any>[]) => {
-  const initialState = states.reduce(
+  const initialState = states.reduce<IReducerState>(
     (obj, { stateName, options }) =>
       Object.assign(obj, {
         [stateName]: {
