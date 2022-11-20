@@ -1,4 +1,5 @@
 import { AsyncThunk } from "@reduxjs/toolkit";
+import { IFetchingState } from "../global.types";
 
 export interface ICreateReducerInput<T, R> {
   asyncThunk: AsyncThunk<T, any, any>;
@@ -10,15 +11,3 @@ export interface IReduceOptions<T, R> {
   initialState?: any;
   payloadTransformer?: (input: T) => R;
 }
-
-export interface IFetchingState {
-  fetching: boolean;
-  fetchingSuccess: boolean;
-  fetchingFailure: boolean;
-}
-
-export interface IReducerState {
-  [key: string]: IInitialState;
-}
-
-export type IInitialState = IFetchingState & { data: any };
